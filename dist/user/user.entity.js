@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = exports.UserRole = void 0;
 const typeorm_1 = require("typeorm");
 const bcrypt = require("bcrypt");
+const response_entity_1 = require("../response/response.entity");
 var UserRole;
 (function (UserRole) {
     UserRole["CANDIDATE"] = "candidate";
@@ -48,6 +49,10 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => response_entity_1.Response, (response) => response.user),
+    __metadata("design:type", Array)
+], User.prototype, "responses", void 0);
 __decorate([
     (0, typeorm_1.BeforeInsert)(),
     (0, typeorm_1.BeforeUpdate)(),

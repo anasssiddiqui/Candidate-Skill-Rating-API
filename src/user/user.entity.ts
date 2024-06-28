@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Response } from '../response/response.entity';
 
 export enum UserRole {
   CANDIDATE = 'candidate',
@@ -23,6 +24,8 @@ export class User {
   })
   role: UserRole;
 
+  @OneToMany(() => Response, (response) => response.user)
+  responses: Response[];
   // Add hooks for password hashing
   @BeforeInsert()
   @BeforeUpdate()

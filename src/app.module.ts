@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
-import { QuestionResponseModule } from './question-response/question-response.module';
 import { AuthModule } from './auth/auth.module';
 import { User } from './user/user.entity';
-import { QuestionResponse } from './question-response/question-response.entity';
-
+import { QuestionModule } from './question/question.module';
+import { ResponseModule } from './response/response.module';
 @Module({
   // Used .env file for getting this credentials
   imports: [
@@ -16,12 +15,13 @@ import { QuestionResponse } from './question-response/question-response.entity';
       username: 'root',
       password: '#root123',
       database: 'demo',
-      entities: [User, QuestionResponse],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     UserModule,
-    QuestionResponseModule,
     AuthModule,
+    QuestionModule,
+    ResponseModule
   ],
 })
-export class AppModule {}
+export class AppModule { }

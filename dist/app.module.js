@@ -10,10 +10,9 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const user_module_1 = require("./user/user.module");
-const question_response_module_1 = require("./question-response/question-response.module");
 const auth_module_1 = require("./auth/auth.module");
-const user_entity_1 = require("./user/user.entity");
-const question_response_entity_1 = require("./question-response/question-response.entity");
+const question_module_1 = require("./question/question.module");
+const response_module_1 = require("./response/response.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -27,12 +26,13 @@ exports.AppModule = AppModule = __decorate([
                 username: 'root',
                 password: '#root123',
                 database: 'demo',
-                entities: [user_entity_1.User, question_response_entity_1.QuestionResponse],
+                entities: [__dirname + '/**/*.entity{.ts,.js}'],
                 synchronize: true,
             }),
             user_module_1.UserModule,
-            question_response_module_1.QuestionResponseModule,
             auth_module_1.AuthModule,
+            question_module_1.QuestionModule,
+            response_module_1.ResponseModule
         ],
     })
 ], AppModule);
