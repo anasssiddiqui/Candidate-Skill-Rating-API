@@ -7,6 +7,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -14,6 +15,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { QuestionResponseService } from './question-response.service';
 import { CreateQuestionResponseDto } from './dto/create-question-response.dto';
@@ -34,9 +36,12 @@ import {
   DELETE_QUESTION_RESPONSE_DESCRIPTION_SUCCESS,
   DELETE_QUESTION_RESPONSE_DESCRIPTION_NOT_FOUND,
 } from '../swagger-definitions';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('question-responses')
 @Controller('question-responses')
+@UseGuards(JwtAuthGuard) // Secure all endpoints in this controller
+@ApiBearerAuth()
 export class QuestionResponseController {
   constructor(
     private readonly questionResponseService: QuestionResponseService,

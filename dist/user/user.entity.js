@@ -11,12 +11,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = exports.UserRole = void 0;
 const typeorm_1 = require("typeorm");
+const bcrypt = require("bcrypt");
 var UserRole;
 (function (UserRole) {
     UserRole["CANDIDATE"] = "candidate";
     UserRole["REVIEWER"] = "reviewer";
 })(UserRole || (exports.UserRole = UserRole = {}));
 let User = class User {
+    async hashPassword() {
+        if (this.password) {
+            const saltRounds = 14;
+            this.password = await bcrypt.hash(this.password, saltRounds);
+        }
+    }
+    async comparePassword(password) {
+        return bcrypt.compare(password, this.password);
+    }
 };
 exports.User = User;
 __decorate([
@@ -24,7 +34,7 @@ __decorate([
     __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
 ], User.prototype, "name", void 0);
 __decorate([
@@ -38,6 +48,13 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
+__decorate([
+    (0, typeorm_1.BeforeInsert)(),
+    (0, typeorm_1.BeforeUpdate)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], User.prototype, "hashPassword", null);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

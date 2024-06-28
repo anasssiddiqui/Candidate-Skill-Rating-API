@@ -19,24 +19,31 @@ const jwt_auth_guard_1 = require("./jwt-auth.guard");
 const swagger_1 = require("@nestjs/swagger");
 const login_dto_1 = require("./dto/login.dto");
 const profile_dto_1 = require("./dto/profile.dto");
-const swagger_2 = require("../swagger");
+const create_user_dto_1 = require("../user/dto/create-user.dto");
+const api_response_1 = require("../utility/api-response");
 const swagger_definitions_1 = require("../swagger-definitions");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
     async login(req) {
-        return this.authService.login(req.body);
+        const result = await this.authService.login(req.body);
+        return new api_response_1.SuccessResponse(swagger_definitions_1.LOGIN_DESCRIPTION_SUCCESS, result);
     }
-    getProfile(req) { return req.user; }
+    getProfile(req) {
+        return new api_response_1.SuccessResponse(swagger_definitions_1.LOGIN_DESCRIPTION_SUCCESS, req.user);
+    }
+    async create(createUserDto) {
+        const result = await this.authService.create(createUserDto);
+        return new api_response_1.SuccessResponse(swagger_definitions_1.SIGNUP_DESCRIPTION_SUCCESS, result);
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Post)('login'),
-    (0, swagger_1.ApiOperation)({ ...swagger_2.swaggerOptions, operationId: 'login', summary: swagger_definitions_1.LOGIN_SUMMARY, description: swagger_definitions_1.LOGIN_DESCRIPTION_SUCCESS, tags: ['auth'], }),
+    (0, swagger_1.ApiOperation)({ operationId: 'login', summary: swagger_definitions_1.LOGIN_SUMMARY, description: swagger_definitions_1.LOGIN_DESCRIPTION_SUCCESS, tags: ['auth'] }),
     (0, swagger_1.ApiBody)({ type: login_dto_1.LoginDto }),
     (0, swagger_1.ApiResponse)({ status: 201, description: swagger_definitions_1.LOGIN_DESCRIPTION_SUCCESS }),
-    (0, swagger_1.ApiResponse)({ status: 401, description: swagger_definitions_1.LOGIN_DESCRIPTION_UNAUTHORIZED }),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -46,14 +53,24 @@ __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)('profile'),
     (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiOperation)({ ...swagger_2.swaggerOptions, operationId: 'profile', summary: swagger_definitions_1.PROFILE_SUMMARY, description: swagger_definitions_1.PROFILE_DESCRIPTION_SUCCESS, tags: ['auth'] }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: swagger_definitions_1.PROFILE_DESCRIPTION_SUCCESS, type: profile_dto_1.ProfileDto }),
+    (0, swagger_1.ApiOperation)({ operationId: 'profile', summary: swagger_definitions_1.PROFILE_SUMMARY, description: swagger_definitions_1.PROFILE_DESCRIPTION_SUCCESS, tags: ['auth'] }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: swagger_definitions_1.PROFILE_DESCRIPTION_SUCCESS, type: profile_dto_1.ProfileDto, }),
     (0, swagger_1.ApiResponse)({ status: 401, description: swagger_definitions_1.PROFILE_DESCRIPTION_UNAUTHORIZED }),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getProfile", null);
+__decorate([
+    (0, common_1.Post)('signup'),
+    (0, swagger_1.ApiOperation)({ operationId: 'signup', summary: swagger_definitions_1.SIGNUP_SUMMARY, description: swagger_definitions_1.SIGNUP_DESCRIPTION_SUCCESS, tags: ['auth'] }),
+    (0, swagger_1.ApiBody)({ type: create_user_dto_1.CreateUserDto }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: swagger_definitions_1.SIGNUP_DESCRIPTION_BAD_REQUEST }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "create", null);
 exports.AuthController = AuthController = __decorate([
     (0, swagger_1.ApiTags)('auth'),
     (0, common_1.Controller)('auth'),

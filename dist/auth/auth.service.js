@@ -27,15 +27,22 @@ let AuthService = class AuthService {
         }
         return null;
     }
-    async login(user) {
-        const payload = {
-            username: user.username,
-            sub: user.userId,
-            role: user.role,
-        };
+    async login(loginDto) {
+        const user = await this.usersService.findByName(loginDto.username);
+        if (!user || !(await user.comparePassword(loginDto.password))) {
+            throw new common_1.UnauthorizedException('Invalid credentials');
+        }
+        const payload = { username: user.name, sub: user.id, role: user.role };
         return {
             access_token: this.jwtService.sign(payload),
         };
+    }
+    async create(createUserDto) {
+        const existingUser = await this.usersService.findByName(createUserDto.name);
+        if (existingUser) {
+            throw new common_1.ConflictException('Username already exists');
+        }
+        return this.usersService.create(createUserDto);
     }
 };
 exports.AuthService = AuthService;

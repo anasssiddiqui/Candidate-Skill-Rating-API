@@ -21,12 +21,12 @@ let UserService = class UserService {
     constructor(usersRepository) {
         this.usersRepository = usersRepository;
     }
-    create(createUserDto) {
+    async create(createUserDto) {
         const user = this.usersRepository.create(createUserDto);
-        return this.usersRepository.save(user);
+        return await this.usersRepository.save(user);
     }
-    findAll() {
-        return this.usersRepository.find();
+    async findAll() {
+        return await this.usersRepository.find();
     }
     findOne(id) {
         return this.usersRepository.findOneBy({ id });

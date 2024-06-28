@@ -2,20 +2,19 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Param,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
+import { SuccessResponse, BadRequestResponse } from '../utility/api-response';
+
 import {
-  CREATE_USER_SUMMARY,
-  CREATE_USER_DESCRIPTION_SUCCESS,
-  CREATE_USER_DESCRIPTION_FORBIDDEN,
   GET_USERS_SUMMARY,
   GET_USERS_DESCRIPTION,
   GET_USER_SUMMARY,
@@ -28,21 +27,14 @@ import {
   DELETE_USER_DESCRIPTION_SUCCESS,
   DELETE_USER_DESCRIPTION_NOT_FOUND,
 } from '../swagger-definitions';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @ApiTags('users')
 @Controller('users')
+@UseGuards(JwtAuthGuard) // Secure all endpoints in this controller
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
-  /**
-   * Endpoint to create a new user.
-   * @param createUserDto The data to create a user.
-   * @returns The newly created user.
-   */
-  @Post()
-  @ApiOperation({ summary: CREATE_USER_SUMMARY })
-  @ApiResponse({ status: 201, description: CREATE_USER_DESCRIPTION_SUCCESS })
-  @ApiResponse({ status: 403, description: CREATE_USER_DESCRIPTION_FORBIDDEN })
-  create(@Body() createUserDto: CreateUserDto) { return this.userService.create(createUserDto); }
 
   /**
    * Endpoint to retrieve all users.
@@ -51,7 +43,10 @@ export class UserController {
   @Get()
   @ApiOperation({ summary: GET_USERS_SUMMARY })
   @ApiResponse({ status: 200, description: GET_USERS_DESCRIPTION })
-  findAll() { return this.userService.findAll(); }
+  async findAll() {
+    const result = await this.userService.findAll();
+    return new SuccessResponse(GET_USERS_DESCRIPTION, result);
+  }
 
   /**
    * Endpoint to retrieve a user by ID.
@@ -61,9 +56,11 @@ export class UserController {
   @Get(':id')
   @ApiOperation({ summary: GET_USER_SUMMARY })
   @ApiParam({ name: 'id', type: 'string' })
-  @ApiResponse({ status: 200, description: GET_USER_DESCRIPTION_SUCCESS })
   @ApiResponse({ status: 404, description: GET_USER_DESCRIPTION_NOT_FOUND })
-  findOne(@Param('id') id: string) { return this.userService.findOne(+id) }
+  async findOne(@Param('id') id: string) {
+    const result = await this.userService.findOne(+id)
+    return new SuccessResponse(GET_USER_DESCRIPTION_SUCCESS, result);
+  }
 
   /**
    * Endpoint to update a user by ID.
@@ -74,9 +71,11 @@ export class UserController {
   @Put(':id')
   @ApiOperation({ summary: UPDATE_USER_SUMMARY })
   @ApiParam({ name: 'id', type: 'string' })
-  @ApiResponse({ status: 200, description: UPDATE_USER_DESCRIPTION_SUCCESS })
   @ApiResponse({ status: 404, description: UPDATE_USER_DESCRIPTION_NOT_FOUND })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) { return this.userService.update(+id, updateUserDto) }
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    const result = await this.userService.update(+id, updateUserDto)
+    return new SuccessResponse(UPDATE_USER_DESCRIPTION_SUCCESS, result);
+  }
 
   /**
    * Endpoint to delete a user by ID.
@@ -86,7 +85,8 @@ export class UserController {
   @Delete(':id')
   @ApiOperation({ summary: DELETE_USER_SUMMARY })
   @ApiParam({ name: 'id', type: 'string' })
-  @ApiResponse({ status: 200, description: DELETE_USER_DESCRIPTION_SUCCESS })
   @ApiResponse({ status: 404, description: DELETE_USER_DESCRIPTION_NOT_FOUND })
-  remove(@Param('id') id: string) { return this.userService.remove(+id) }
+  remove(@Param('id') id: string) {
+    return new SuccessResponse(DELETE_USER_DESCRIPTION_SUCCESS);
+  }
 }

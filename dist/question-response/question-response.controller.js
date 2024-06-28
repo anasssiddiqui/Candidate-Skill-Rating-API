@@ -19,6 +19,7 @@ const question_response_service_1 = require("./question-response.service");
 const create_question_response_dto_1 = require("./dto/create-question-response.dto");
 const update_question_response_dto_1 = require("./dto/update-question-response.dto");
 const swagger_definitions_1 = require("../swagger-definitions");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 let QuestionResponseController = class QuestionResponseController {
     constructor(questionResponseService) {
         this.questionResponseService = questionResponseService;
@@ -89,6 +90,8 @@ __decorate([
 exports.QuestionResponseController = QuestionResponseController = __decorate([
     (0, swagger_1.ApiTags)('question-responses'),
     (0, common_1.Controller)('question-responses'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
     __metadata("design:paramtypes", [question_response_service_1.QuestionResponseService])
 ], QuestionResponseController);
 //# sourceMappingURL=question-response.controller.js.map

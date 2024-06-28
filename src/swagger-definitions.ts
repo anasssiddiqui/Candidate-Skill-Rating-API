@@ -8,6 +8,10 @@ export const PROFILE_SUMMARY = 'Get user profile';
 export const PROFILE_DESCRIPTION_SUCCESS = 'User profile retrieved successfully';
 export const PROFILE_DESCRIPTION_UNAUTHORIZED = 'Unauthorized';
 
+export const SIGNUP_SUMMARY = 'Sign up a new user';
+export const SIGNUP_DESCRIPTION_SUCCESS = 'User signed up successfully';
+export const SIGNUP_DESCRIPTION_BAD_REQUEST = 'Bad request';
+
 // this is for user module
 export const CREATE_USER_SUMMARY = 'Create a new user';
 export const CREATE_USER_DESCRIPTION_SUCCESS = 'The user has been successfully created.';

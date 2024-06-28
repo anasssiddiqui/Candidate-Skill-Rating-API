@@ -7,4 +7,6 @@ export declare class User {
     name: string;
     password: string;
     role: UserRole;
+    hashPassword(): Promise<void>;
+    comparePassword(password: string): Promise<boolean>;
 }

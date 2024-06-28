@@ -15,6 +15,7 @@ const jwt_1 = require("@nestjs/jwt");
 const local_strategy_1 = require("./local.strategy");
 const jwt_strategy_1 = require("./jwt.strategy");
 const auth_controller_1 = require("./auth.controller");
+const constants_1 = require("../utility/constants");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -24,7 +25,7 @@ exports.AuthModule = AuthModule = __decorate([
             user_module_1.UserModule,
             passport_1.PassportModule,
             jwt_1.JwtModule.register({
-                secret: 'staticKey',
+                secret: constants_1.jwtConstants.secret,
                 signOptions: { expiresIn: '60m' },
             }),
         ],
